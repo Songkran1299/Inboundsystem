@@ -1,0 +1,68 @@
+{
+    "tasks": {
+        "task_20250712_184955": {
+            "id": "task_20250712_184955",
+            "po_number": "P2321002355",
+            "company_name": "ไม่พบ",
+            "date": "11/07/2023",
+            "status": "เสร็จสิ้น",
+            "admin_priority": false,
+            "creator_name": "songkran",
+            "invoice_number": "",
+            "item_list": [
+                {
+                    "item_id": "item_0",
+                    "item_desc": "8151-XT002085725 ตลับกรองไอระเหยสารเคมีและปรอท",
+                    "original_quantity": "480.00",
+                    "original_location": "ไม่พบ",
+                    "edited_quantity": "480.00",
+                    "edited_location": "ไม่พบ",
+                    "is_active": true,
+                    "manual_remark": "",
+                    "location_writer": "songkran",
+                    "remarks": "ไม่แก้",
+                    "remarks_color": "green"
+                }
+            ],
+            "image_path": "task_20250712_184955.png",
+            "requires_review": false,
+            "created_at": 1752346221.3615813
+        },
+        "task_20250712_185228": {
+            "id": "task_20250712_185228",
+            "po_number": "P2321002355",
+            "company_name": "ไม่พบ",
+            "date": "11/07/2023",
+            "status": "รอดำเนินการ",
+            "admin_priority": false,
+            "creator_name": "songkran",
+            "invoice_number": "",
+            "item_list": [
+                {
+                    "item_id": "item_0",
+                    "item_desc": "8151-XT002085725 ตลับกรองไอระเหยสารเคมีและปรอท",
+                    "original_quantity": "480.00",
+                    "original_location": "ไม่พบ",
+                    "edited_quantity": "480.00",
+                    "edited_location": "ไม่พบ",
+                    "is_active": true,
+                    "manual_remark": "",
+                    "location_writer": "",
+                    "remarks": "",
+                    "remarks_color": ""
+                }
+            ],
+            "image_path": "task_20250712_185228.png",
+            "requires_review": false,
+            "created_at": 1752346361.8789499
+        }
+    },
+    "meta": {
+        "creators": [
+            "songkran"
+        ],
+        "location_writers": [
+            "songkran"
+        ]
+    }
+}

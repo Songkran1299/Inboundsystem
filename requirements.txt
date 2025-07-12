@@ -1,6 +1,4 @@
-PyMuPDF
-flask
-pytesseract  
-frontend 
-tools    
+gunicorn
 fitz
+flask
+pytesseract
