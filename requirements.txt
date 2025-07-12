@@ -2,8 +2,8 @@ gunicorn
 flask
 pytesseract
 PyMuPDF  
-frontend <-- ต้องไม่มีบรรทัดนี้
-tools    <-- ต้องไม่มีบรรทัดนี้
+frontend 
+tools    
 pytz
 puremagic
 pathlib
