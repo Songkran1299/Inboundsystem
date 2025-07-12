@@ -3,4 +3,5 @@ fitz
 flask
 pytesseract
 frontend
+PyMuPDF
 tools
