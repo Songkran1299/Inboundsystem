@@ -3,3 +3,4 @@ fitz
 flask
 pytesseract
 frontend
+tools
