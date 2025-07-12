@@ -3,7 +3,7 @@ modules = ["python-3.11"]
 
 [nix]
 channel = "stable-24_05"
-packages = ["tesseract"]
+packages = ["bash", "cacert", "gitFull", "glibcLocales", "libxcrypt", "pkg-config", "tesseract", "which", "xcodebuild", "xsimd", "zlib"]
 
 [unitTest]
 language = "python3"
