@@ -1,0 +1,4 @@
+gunicorn
+fitz
+flask
+pytesseract

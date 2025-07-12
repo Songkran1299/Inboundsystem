@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แก้ไขงาน - {{ task.po_number }}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap');
+        :root { --bg-color: #343a40; --card-bg: #495057; --text-color: #f8f9fa; --header-color: #ffffff; --border-color: #6c757d; --accent-color: #0d6efd;}
+        body { font-family: 'Sarabun', sans-serif; margin: 0; background-color: var(--bg-color); color: var(--text-color); }
+        .navbar { background-color: var(--card-bg); padding: 1em 2em; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .logo { font-size: 1.5em; font-weight: 700; color: var(--accent-color); }
+        .logo span { font-weight: 400; color: var(--header-color); }
+        .main-container { max-width: 1600px; margin: 2em auto; padding: 0 2em; }
+        .card { background-color: var(--card-bg); padding: 2em; border-radius: 8px; border: 1px solid var(--border-color); }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2em; }
+        details { border: 1px solid var(--border-color); border-radius: 5px; margin-bottom: 10px; }
+        summary { font-weight: bold; padding: 1em; cursor: pointer; background-color: #6c757d; display: flex; justify-content: space-between; align-items: center;}
+        .form-content { padding: 1.5em; }
+        input, button, textarea, select { width: 100%; padding: 0.75em; border-radius: 5px; border: 1px solid var(--border-color); font-family: 'Sarabun', sans-serif; font-size: 1em; box-sizing: border-box; margin-bottom: 1em; background-color: #6c757d; color: var(--text-color); }
+        button { background-color: #198754; color: white; cursor: pointer; border-color: #198754; }
+        .save-toast { color: #198754; background-color: #d1e7dd; padding: 5px 10px; border-radius: 5px; font-weight: bold; opacity: 0; transition: opacity 0.5s ease-in-out; }
+        @media (max-width: 768px) {
+            .main-container { padding: 0 1em; margin: 1em auto; }
+            .grid-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">INBOUND <span>SYSTEM</span></div>
+        <a href="{{ url_for('index') }}" style="color: var(--text-color);">&larr; กลับหน้าหลัก</a>
+    </div>
+    <div class="main-container">
+        <h2>แก้ไขงาน: PO {{ task.po_number }}</h2>
+        <div class="grid-container">
+            <div class="card">
+                <h3>รายการสินค้า</h3>
+                {% for item in task.item_list %}
+                <details open><summary>
+                    <span>{{ loop.index }}. {{ item.item_desc }}</span>
+                    <div style="display: flex; align-items: center;">
+                        <span class="save-toast" id="toast-{{ item.item_id }}">บันทึกแล้ว! ✓</span>
+                        <span style="color: {{ 'red' if item.remarks_color == 'red' else '#68d391' }}; font-weight: bold; margin-left:1em;">{{ item.remarks }}</span>
+                    </div>
+                </summary>
+                    <div class="form-content">
+                        <form action="/submit_item_update/{{ task.id }}" method="post">
+                            <input type="hidden" name="item_id" value="{{ item.item_id }}">
+                            <label>ผู้เขียน Location:</label><input list="writer-list" name="location_writer" value="{{ item.location_writer or username }}" required>
+                            <datalist id="writer-list">{% for writer in location_writers %}<option value="{{ writer }}">{% endfor %}</datalist>
+                            <label>Location:</label><input type="text" name="location" value="{{ item.edited_location }}" required>
+                            <label>จำนวน (Qty):</label><input type="text" name="quantity" value="{{ item.edited_quantity }}" required>
+                            <label>หมายเหตุ:</label><textarea name="manual_remark">{{ item.manual_remark }}</textarea>
+                            <label style="display: flex; align-items: center; gap: 10px;"><input type="checkbox" name="is_active" value="true" {{ 'checked' if item.is_active else '' }} style="width: auto;"> รับสินค้ารายการนี้</label>
+                            <button type="submit">บันทึกรายการนี้</button>
+                        </form>
+                    </div>
+                </details>
+                {% endfor %}
+            </div>
+            <div class="card">
+                <h3>เอกสารอ้างอิง</h3>
+                <img src="{{ url_for('static', filename=task.image_path) }}" alt="PDF Preview" style="width:100%;">
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const savedItemId = urlParams.get('saved_item');
+            if (savedItemId) {
+                const toastElement = document.getElementById('toast-' + savedItemId);
+                if (toastElement) {
+                    toastElement.style.opacity = 1;
+                    setTimeout(() => { toastElement.style.opacity = 0; }, 3000);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

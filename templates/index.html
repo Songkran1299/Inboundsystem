@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INBOUND - Location System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap');
+        :root { --bg-color: #343a40; --card-bg: #495057; --text-color: #f8f9fa; --header-color: #ffffff; --border-color: #6c757d; --accent-color: #0d6efd; --accent-hover: #3d8bfd; }
+        body { font-family: 'Sarabun', sans-serif; margin: 0; background-color: var(--bg-color); color: var(--text-color); }
+        .navbar { background-color: var(--card-bg); padding: 1em 2em; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .logo { font-size: 1.5em; font-weight: 700; color: var(--accent-color); }
+        .logo span { font-weight: 400; color: var(--header-color); }
+        .main-container { max-width: 1600px; margin: 2em auto; padding: 0 2em; }
+        .card { background-color: var(--card-bg); padding: 2em; border-radius: 8px; margin-bottom: 2em; border: 1px solid var(--border-color); }
+        input, button, select { padding: 0.75em; border-radius: 5px; border: 1px solid var(--border-color); font-family: 'Sarabun', sans-serif; font-size: 1em; background-color: #6c757d; color: var(--text-color); }
+        button { background-color: var(--accent-color); color: white; cursor: pointer; border-color: var(--accent-color); transition: background-color 0.2s; }
+        button:hover { background-color: var(--accent-hover); }
+        table { width: 100%; border-collapse: collapse; margin-top: 1.5em; }
+        th, td { border-bottom: 1px solid var(--border-color); padding: 1em; text-align: left; }
+        .table-wrapper { overflow-x: auto; }
+        #drop-zone-label { display: block; border: 2px dashed var(--border-color); border-radius: 10px; padding: 40px; text-align: center; cursor: pointer; transition: background-color 0.2s, border-color 0.2s; }
+        #drop-zone-label:hover, #drop-zone-label.drag-over { background-color: #6c757d; border-color: var(--accent-color); }
+        #drop-zone-label .icon { font-size: 3em; color: var(--border-color); }
+        #drop-zone-label p { font-size: 1.2em; color: #adb5bd; margin: 0.5em 0; }
+        #loader-overlay { position: fixed; display: none; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.85); z-index: 999; flex-direction: column; justify-content: center; align-items: center; color: white; font-size: 1.5em; }
+        @media (max-width: 768px) {
+            body { font-size: 14px; }
+            .main-container { padding: 0 1em; margin: 1em auto; }
+            .card { padding: 1.5em; }
+            .navbar, .header-section, .upload-form-inputs { flex-direction: column; gap: 1em; align-items: stretch; }
+            input, button, select { width: 100%; box-sizing: border-box; }
+        }
+    </style>
+</head>
+<body>
+    <div id="loader-overlay">
+        <img src="https://i.gifer.com/ZNeT.gif" alt="Hourglass Animation" width="100">
+        <p>กำลังอัปโหลดเอกสาร...</p>
+    </div>
+    <div class="navbar">
+        <div class="logo">INBOUND <span>SYSTEM</span></div>
+        <div class="user-info"><span>สวัสดี, <strong>{{ username }}</strong> | <a href="/logout">Logout</a></span></div>
+    </div>
+    <div class="main-container">
+        <div class="card">
+            <h2>อัปโหลดเอกสารใหม่</h2>
+            <form action="/upload" method="post" enctype="multipart/form-data" id="upload-form">
+                <label for="pdf_file_input" id="drop-zone-label">
+                    <div class="icon">⇪</div>
+                    <p>ลากไฟล์ PDF มาวาง หรือ <strong>คลิกที่นี่</strong> เพื่ออัปโหลด</p>
+                    <p id="file-name" style="color:var(--accent-color); font-weight:bold;"></p>
+                </label>
+                <input type="file" name="pdf_file" id="pdf_file_input" accept="application/pdf" required hidden>
+                <div class="upload-form-inputs" style="display: flex; justify-content: space-between; align-items: center; margin-top: 1.5em;">
+                    <input list="creator-list" id="creator-name" name="creator_name" value="{{ username }}" required readonly style="background-color: #343a40;">
+                    <datalist id="creator-list">{% for creator in creators %}<option value="{{ creator }}">{% endfor %}</datalist>
+                    <button type="submit">อัปโหลดไฟล์</button>
+                </div>
+            </form>
+        </div>
+        <div class="card">
+            <div class="header-section" style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>รายการทั้งหมด</h2>
+                <a href="/daily_report" class="button-link" style="background-color: #198754; color:white; padding: 0.75em; border-radius: 5px; text-decoration: none;">สรุปผลประจำวัน</a>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>PO Number</th><th>Company</th><th>Date</th><th>Creator / Writer</th><th>Status</th><th>การแก้ไข</th><th>Action</th></tr></thead>
+                    <tbody>
+                        {% for task in tasks %}
+                        <tr>
+                            <td>{{ task.po_number }} {% if task.requires_review %}<span style="color:#dc3545;">(ต้องตรวจ)</span>{% endif %}</td>
+                            <td>{{ task.company_name }}</td>
+                            <td>{{ task.date }}</td>
+                            <td>{{ task.creator_name or '-' }} / {{ task.writers_display or '-' }}</td>
+                            <td>{{ task.status }}</td>
+                            <td>{% if task.has_edits %}<span style="color:#f56565;">มีการแก้ไข</span>{% else %}<span>-</span>{% endif %}</td>
+                            <td><a href="/task/{{ task.id }}">ดู/แก้ไข</a></td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="7" style="text-align: center;">ยังไม่มีข้อมูล</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        const dropZoneLabel = document.getElementById('drop-zone-label'), fileInput = document.getElementById('pdf_file_input'), fileNameDisplay = document.getElementById('file-name'), uploadForm = document.getElementById('upload-form'), loader = document.getElementById('loader-overlay');
+        fileInput.addEventListener('change', () => { if (fileInput.files.length > 0) fileNameDisplay.textContent = `ไฟล์ที่เลือก: ${fileInput.files[0].name}`; });
+        dropZoneLabel.addEventListener('dragover', (e) => { e.preventDefault(); dropZoneLabel.classList.add('drag-over'); });
+        dropZoneLabel.addEventListener('dragleave', () => dropZoneLabel.classList.remove('drag-over'));
+        dropZoneLabel.addEventListener('drop', (e) => { e.preventDefault(); dropZoneLabel.classList.remove('drag-over'); if (e.dataTransfer.files.length > 0) { fileInput.files = e.dataTransfer.files; fileNameDisplay.textContent = `ไฟล์ที่เลือก: ${fileInput.files[0].name}`; } });
+        uploadForm.addEventListener('submit', (e) => { if (fileInput.files.length === 0) { e.preventDefault(); alert('กรุณาเลือกไฟล์ PDF หรือลากไฟล์มาวางก่อนครับ'); } else { loader.style.display = 'flex'; } });
+    </script>
+</body>
+</html>

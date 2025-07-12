@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8"><title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: sans-serif; margin: 2em; background-color: #2d3748; color: #e2e8f0; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2em; }
+        .chart-container { background-color: #4a5568; padding: 1.5em; border-radius: 8px; }
+        a { color: #63b3ed; }
+    </style>
+</head>
+<body>
+    <h1>Dashboard สรุปผล</h1>
+    <a href="{{ url_for('index') }}">&larr; กลับไปหน้าหลัก</a>
+    <div class="dashboard-grid" style="margin-top: 2em;">
+        <div class="chart-container"><canvas id="statusChart"></canvas></div>
+        <div class="chart-container"><canvas id="priorityChart"></canvas></div>
+    </div>
+
+    <script>
+        const tasks = {{ tasks|tojson }};
+
+        // กราฟสถานะ
+        const statusCounts = tasks.reduce((acc, task) => {
+            acc[task.status] = (acc[task.status] || 0) + 1;
+            return acc;
+        }, {});
+        new Chart(document.getElementById('statusChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(statusCounts),
+                datasets: [{ label: 'สถานะงาน', data: Object.values(statusCounts), backgroundColor: ['#f6e05e', '#68d391'] }]
+            },
+            options: { plugins: { title: { display: true, text: 'สัดส่วนสถานะงานทั้งหมด' }}}
+        });
+
+        // กราฟประเภท
+        const priorityCounts = tasks.reduce((acc, task) => {
+            acc[task.priority] = (acc[task.priority] || 0) + 1;
+            return acc;
+        }, {});
+        new Chart(document.getElementById('priorityChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(priorityCounts),
+                datasets: [{ label: 'ประเภทงาน', data: Object.values(priorityCounts), backgroundColor: ['#a0aec0', '#f56565', '#b794f4'] }]
+            },
+            options: { plugins: { title: { display: true, text: 'จำนวนงานแต่ละประเภท' }}}
+        });
+    </script>
+</body>
+</html>

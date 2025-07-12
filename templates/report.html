@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปรายงานประจำวัน</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap');
+        :root { --bg-color: #343a40; --card-bg: #495057; --text-color: #f8f9fa; --header-color: #ffffff; --border-color: #6c757d; --accent-color: #0d6efd;}
+        body { font-family: 'Sarabun', sans-serif; margin: 0; background-color: var(--bg-color); color: var(--text-color); }
+        .navbar { background-color: var(--card-bg); padding: 1em 2em; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        .logo { font-size: 1.5em; font-weight: 700; color: var(--accent-color); }
+        .main-container { max-width: 1200px; margin: 2em auto; padding: 0 2em; }
+        .report-header { text-align: center; margin-bottom: 2em; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2em; }
+        .card { background-color: var(--card-bg); padding: 1.5em; border-radius: 8px; border: 1px solid var(--border-color); }
+        h1, h2 { color: var(--header-color); }
+        a { color: var(--accent-color); text-decoration: none; }
+        @media (max-width: 768px) {
+            .main-container { padding: 0 1em; margin: 1em auto; }
+            .grid-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">INBOUND <span>DAILY REPORT</span></div>
+        <div><span>ผู้ใช้งาน: <strong>{{ username }}</strong> | <a href="{{ url_for('index') }}">กลับหน้าหลัก</a></span></div>
+    </div>
+    <div class="main-container">
+        <div class="report-header">
+            <h1>สรุปผลงานของทุกคน ประจำวันที่ {{ report_date }}</h1>
+            <h2>จำนวนบิลทั้งหมดที่สร้างวันนี้: {{ total_bills }} บิล</h2>
+        </div>
+        <div class="grid-container">
+            <div class="card"><h2>สรุปโดยผู้ทำเอกสาร</h2><canvas id="creatorChart"></canvas></div>
+            <div class="card"><h2>สรุปโดยผู้เขียน Location</h2><canvas id="writerChart"></canvas></div>
+        </div>
+    </div>
+    <script>
+        const creatorData = {{ creator_summary|tojson }}, writerData = {{ writer_summary|tojson }};
+        const colors = ['#0d6efd', '#6f42c1', '#d63384', '#fd7e14', '#198754', '#ffc107', '#dc3545'];
+        Chart.defaults.color = '#f8f9fa';
+        new Chart(document.getElementById('creatorChart'), { type: 'pie', data: { labels: Object.keys(creatorData), datasets: [{ data: Object.values(creatorData), backgroundColor: colors, hoverOffset: 4 }] }, options: { plugins: { legend: { labels: { color: '#f8f9fa' } } } }});
+        new Chart(document.getElementById('writerChart'), { type: 'bar', data: { labels: Object.keys(writerData), datasets: [{ label: 'จำนวนรายการที่เขียน', data: Object.values(writerData), backgroundColor: colors }] }, options: { scales: { y: { beginAtZero: true, ticks: { color: '#f8f9fa' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } }, x: { ticks: { color: '#f8f9fa' }, grid: { color: 'rgba(255, 255, 255, 0.1)' } } } } });
+    </script>
+</body>
+</html>

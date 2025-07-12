@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - INBOUND SYSTEM</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap');
+        body { display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #343a40; font-family: 'Sarabun', sans-serif; }
+        .login-box { background-color: #495057; padding: 3em; border-radius: 12px; text-align: center; border: 1px solid #6c757d; width: 90%; max-width: 400px; box-sizing: border-box; }
+        h2 { color: #ffffff; }
+        input { display: block; margin: 1em 0; padding: 0.75em; width: 100%; border: 1px solid #6c757d; border-radius: 5px; font-size: 1em; background-color: #343a40; color: #f8f9fa; box-sizing: border-box;}
+        button { width: 100%; padding: 0.75em; background-color: #0d6efd; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 1.1em; }
+        .flash.error { background-color: #dc3545; color: white; padding: 1em; border-radius: 5px; margin-bottom: 1em;}
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h2>INBOUND SYSTEM</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}
+            {% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}
+        {% endif %}{% endwith %}
+        <form method="post">
+            <input type="text" name="username" placeholder="ใส่ชื่อผู้ใช้ (พิมพ์เล็ก/ใหญ่ได้)" required>
+            <button type="submit">เข้าสู่ระบบ</button>
+        </form>
+    </div>
+</body>
+</html>

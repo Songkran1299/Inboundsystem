@@ -1,0 +1,40 @@
+{
+    "tasks": {
+        "task_20250712_151319": {
+            "id": "task_20250712_151319",
+            "po_number": "P2321002355",
+            "company_name": "ไม่พบ",
+            "date": "11/07/2023",
+            "status": "เสร็จสิ้น",
+            "admin_priority": false,
+            "creator_name": "songkran",
+            "invoice_number": "",
+            "item_list": [
+                {
+                    "item_id": "item_0",
+                    "item_desc": "8151-XT002085725 ตลับกรองไอระเหยสารเคมีและปรอท",
+                    "original_quantity": "480.00",
+                    "original_location": "ไม่พบ",
+                    "edited_quantity": "480.00",
+                    "edited_location": "ไม่พบ",
+                    "is_active": true,
+                    "manual_remark": "",
+                    "location_writer": "songkran",
+                    "remarks": "ไม่แก้",
+                    "remarks_color": "green"
+                }
+            ],
+            "image_path": "task_20250712_151319.png",
+            "requires_review": false,
+            "created_at": 1752333206.787886
+        }
+    },
+    "meta": {
+        "creators": [
+            "songkran"
+        ],
+        "location_writers": [
+            "songkran"
+        ]
+    }
+}
