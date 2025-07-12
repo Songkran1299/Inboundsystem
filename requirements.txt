@@ -1,7 +1,9 @@
 gunicorn
 flask
 pytesseract
-PyMuPDF
+PyMuPDF  
+frontend <-- ต้องไม่มีบรรทัดนี้
+tools    <-- ต้องไม่มีบรรทัดนี้
 pytz
 puremagic
 pathlib
