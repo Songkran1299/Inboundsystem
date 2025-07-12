@@ -1,6 +1,7 @@
 { pkgs }: {
   deps = [
-    pkgs.python311Full
-    pkgs.tesseract
+    pkgs.python3Full
+    pkgs.tesseract # ติดตั้ง Tesseract OCR engine
+    pkgs.tesseract.withLangModels # ติดตั้งภาษา (รวมถึง eng, tha)
   ];
 }
